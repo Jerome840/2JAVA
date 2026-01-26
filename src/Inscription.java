@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 public class Inscription extends JFrame {
 
     public Inscription() {
-        setTitle("Inscription");
+        setTitle("Istore - Inscription");
         setSize(600, 600);
         setLocation(1400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -24,8 +24,12 @@ public class Inscription extends JFrame {
 
         //Email
         JLabel email = new JLabel("Entrez votre adresse e-mail : ");
+        email.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JTextField champMail = new JTextField(20);
+        champMail.setAlignmentX(Component.CENTER_ALIGNMENT);
         champMail.setMaximumSize(new Dimension(250, 30));
+
         mainInscription.add(email);
         mainInscription.add(champMail);
 
@@ -33,8 +37,12 @@ public class Inscription extends JFrame {
 
         // Pseudo
         JLabel pseudo = new JLabel("Entrez votre pseudo :");
+        pseudo.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JTextField champPseudo = new JTextField(20);
+        champPseudo.setAlignmentX(Component.CENTER_ALIGNMENT);
         champPseudo.setMaximumSize(new Dimension(250, 30));
+
         mainInscription.add(pseudo);
         mainInscription.add(champPseudo);
 
@@ -42,8 +50,12 @@ public class Inscription extends JFrame {
 
         //Mot de Passe
         JLabel motDePasse = new JLabel("Entrez votre mot de passe :");
+        motDePasse.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JTextField champMotDePasse = new JTextField(20);
+        champMotDePasse.setAlignmentX(Component.CENTER_ALIGNMENT);
         champMotDePasse.setMaximumSize(new Dimension(250, 30));
+
         mainInscription.add(motDePasse);
         mainInscription.add(champMotDePasse);
 
@@ -51,8 +63,12 @@ public class Inscription extends JFrame {
 
         // Confirmation de mot de Passe
         JLabel confirmeMotDePasse = new JLabel("Confirmer votre mot de passe :");
+        confirmeMotDePasse.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JTextField champConfirmeMotDePasse = new JTextField(20);
+        champConfirmeMotDePasse.setAlignmentX(Component.CENTER_ALIGNMENT);
         champConfirmeMotDePasse.setMaximumSize(new Dimension(250, 30));
+
         mainInscription.add(confirmeMotDePasse);
         mainInscription.add(champConfirmeMotDePasse);
 
@@ -73,13 +89,31 @@ public class Inscription extends JFrame {
 
         mainInscription.add(Box.createVerticalStrut(20));
 
-        // Magasin
-        JLabel magasin = new JLabel("Magasin :");
         //liste provisoire
         String[] listeMagasins = {"Lyon", "Paris", "Marseille"};
 
+        // Magasin
+        JLabel magasin = new JLabel("Magasin :");
+        magasin.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JComboBox<String> comboMagasins = new JComboBox<>(listeMagasins);
         comboMagasins.setMaximumSize(new Dimension(250,30));
+        comboMagasins.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel magasinPanel = new JPanel();
+        magasinPanel.setLayout(new BoxLayout(magasinPanel, BoxLayout.Y_AXIS));
+        magasinPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        magasinPanel.setMaximumSize(new Dimension(300, 70));
+        magasinPanel.setPreferredSize(new Dimension(300 ,70));
+        magasinPanel.setMinimumSize(new Dimension(300 ,70));
+
+        magasinPanel.add(magasin);
+        magasinPanel.add(comboMagasins);
+
+        // n'affiche pas
+
+        magasinPanel.setVisible(true);
 
         magasin.setVisible(false);
         comboMagasins.setVisible(false);
@@ -99,8 +133,51 @@ public class Inscription extends JFrame {
                 comboMagasins.setVisible(false);
             }
         });
-        mainInscription.add(magasin);
-        mainInscription.add(comboMagasins);
+
+        mainInscription.add(magasinPanel);
+
+        mainInscription.add(Box.createVerticalStrut(30));
+
+        JPanel ligneMagasin = new JPanel();
+        ligneMagasin.setLayout(new BoxLayout(ligneMagasin, BoxLayout.Y_AXIS));
+        ligneMagasin.setMaximumSize(new Dimension(300, 70));
+        ligneMagasin.setPreferredSize(new Dimension(300, 70));
+
+        // Ajout d'une ligne de buttons
+        JPanel ligneButtonsInscription = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 0));
+
+        // Ajout du bouton Retour
+        JButton retour = new JButton("Retour");
+
+        // Action associée
+        retour.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Main().setVisible(true);
+                dispose();
+            }
+        });
+
+        // Ajout du bouton Inscription
+        JButton inscription = new JButton("Inscription");
+
+        // Action associée
+        inscription.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String mail = champMail.getText();
+                if (!mail.endsWith("@supinfo.com")) {
+                    JOptionPane.showMessageDialog(null, "adresse mail non valide, veuillez utilisez votre adresse \"@supinfo\" ");
+                }
+            }
+        });
+
+        // Ajout des boutons à la ligne
+        ligneButtonsInscription.add(retour);
+        ligneButtonsInscription.add(inscription);
+
+        // Ajout de la ligne à la fenêtre
+        mainInscription.add(ligneButtonsInscription);
 
         add(mainInscription);
     }
