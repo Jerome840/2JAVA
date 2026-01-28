@@ -1,3 +1,5 @@
+import dao.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,18 +24,62 @@ public class Main extends JFrame {
         message.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(message);
 
-        mainPanel.add(Box.createVerticalStrut(60));
+        mainPanel.add(Box.createVerticalStrut(80));
+
+        JLabel email = new JLabel("Entrez votre adresse e-mail : ");
+        email.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JTextField champMail = new JTextField(20);
         champMail.setMaximumSize(new Dimension(200, 30));
         champMail.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        mainPanel.add(email);
+        mainPanel.add(Box.createVerticalStrut(10));
         mainPanel.add(champMail);
 
-        mainPanel.add(Box.createVerticalStrut(60));
+        mainPanel.add(Box.createVerticalStrut(30));
+
+        JLabel motdepasse = new JLabel("Entrez votre mot de passe : ");
+        motdepasse.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPasswordField champMotdepasse = new JPasswordField(20);
+        champMotdepasse.setMaximumSize(new Dimension(200, 30));
+        champMotdepasse.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        mainPanel.add(motdepasse);
+        mainPanel.add(Box.createVerticalStrut(10));
+        mainPanel.add(champMotdepasse);
+
+        mainPanel.add(Box.createVerticalStrut(80));
 
         JPanel ligneButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 0));
 
         JButton connexion = new JButton("Connexion");
+
+        connexion.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String email = champMail.getText();
+                String mdp = new String(champMotdepasse.getPassword());
+
+                UserDAO dao = new UserDAO();
+                User user = dao.login(email, mdp);
+
+                if (user !=null) {
+                    if (user.getRole().equals("admin")) {
+                        JOptionPane.showMessageDialog(null, "connexion réussie");
+                        new AdminDashboard(user.getPseudo()).setVisible(true);
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Vous êtes connecté en tant qu'utilisateur ");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Email ou mot de passe incorrect");
+                }
+            }
+        });
+
+
         JButton inscription = new JButton("Inscription");
 
         inscription.addActionListener(new ActionListener() {

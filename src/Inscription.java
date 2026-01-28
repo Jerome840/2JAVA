@@ -1,3 +1,8 @@
+import dao.UserDAO;
+import dao.WhitelistDAO;
+import dao.User;
+
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -165,10 +170,56 @@ public class Inscription extends JFrame {
         inscription.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 String mail = champMail.getText();
+                String pseudo = champPseudo.getText().trim();
+                String mdp = champMotDePasse.getText().trim();
+                String mdp2 = champConfirmeMotDePasse.getText().trim();
+
                 if (!mail.endsWith("@supinfo.com")) {
                     JOptionPane.showMessageDialog(null, "adresse mail non valide, veuillez utilisez votre adresse \"@supinfo\" ");
+                return;
                 }
+
+                if (mail.isEmpty() || pseudo.isEmpty() || mdp.isEmpty() || mdp2.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Veuillez remplir tous les champs");
+                    return;
+                }
+                if (!mdp.equals(mdp2)) {
+                    JOptionPane.showMessageDialog(null, "Les mots de passe ne correspondent pas");
+                    return;
+                }
+
+                WhitelistDAO whitelistDAO= new WhitelistDAO();
+                if (!whitelistDAO.emailExists(mail)) {
+                    JOptionPane.showMessageDialog(null, "Cet email n'est pas autorisé");
+                    return;
+                }
+
+                UserDAO userDAO = new UserDAO();
+                if (userDAO.emailExists(mail)) {
+                    JOptionPane.showMessageDialog(null, "Cet email est déja utilisé");
+                    return;
+                }
+
+                String role = admin.isSelected() ? "admin" : "user";
+
+                Integer storeId = null;
+                if (user.isSelected()) {
+                    storeId = comboMagasins.getSelectedIndex() + 1;
+                }
+
+                User user = new User(0, mail, pseudo, mdp, role, storeId);
+                boolean create = userDAO.addUser(user);
+
+                if (create) {
+                    JOptionPane.showMessageDialog(null, "Inscription réussie !");
+                    new Main().setVisible(true);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null,"Erreur lors de l'inscription");
+                }
+
             }
         });
 

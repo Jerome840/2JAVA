@@ -29,13 +29,17 @@ public class InitDatabase {
                 )
                 """);
 
+            stmt.executeUpdate("""
+                DROP table users
+                """);
+
             // Création table utilisaters
             stmt.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS users (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     email VARCHAR (255) UNIQUE NOT NULL,
                     pseudo VARCHAR (255) NOT NULL,
-                    mot_de_passe VARCHAR (255) NOT NULL,
+                    password VARCHAR (255) NOT NULL,
                     role ENUM('admin', 'user') NOT NULL,
                     store_id INT NULL,
                     FOREIGN KEY (store_id) REFERENCES stores(id)
@@ -74,6 +78,26 @@ public class InitDatabase {
                 """);
 
             System.out.println("Base de donnée et tables crées avec succès !");
+
+            stmt.executeUpdate("""
+            TRUNCATE TABLE users""");
+
+            //inscription du permier utilisateur admin (id : admin@supinfo.com, pseudo : admin, mdp : Admin.01
+            int firstinsert = stmt.executeUpdate("""
+            INSERT INTO users (email, pseudo, password, role)
+            SELECT 'admin@supinfo.com', 'admin', '$2a$10$EZVHtzbbSmdi35Qmp3M4SOXnmJ0K9Xg/LzavczvHT9hbQbsLS2wuK', 'admin'
+            WHERE NOT EXISTS (SELECT 1 FROM users)
+            
+            """);
+
+
+
+            if (firstinsert > 0) {
+                System.out.println("Utilisateur Admin créé avec succès");
+            } else {
+                System.out.println("Aucun admin créé");
+            }
+
 
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'initialisation" + e.getMessage());
