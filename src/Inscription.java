@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import com.istore.auth.AuthService;
+import com.istore.models.User;
+import com.istore.models.Role;
 
 public class Inscription extends JFrame {
 
